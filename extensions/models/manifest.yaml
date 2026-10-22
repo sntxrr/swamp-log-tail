@@ -1,0 +1,23 @@
+manifestVersion: 1
+
+name: "@sntxrr/log-tail"
+version: "2026.10.22.1"
+description: "Read the last lines of a log chosen by NAME from an allowlist fixed in the model definition, with secret values redacted. Built for an alert-triage agent that has no shell: an alert names a log, the cause is usually one line near its end, and the alternatives are a human tailing it for the agent or a general file-read tool that can read anything. The caller passes a name, never a path; the name-to-path map lives in the definition, where only its owner can change it. A name is matched with Object.hasOwn and a name that is not name-shaped is never echoed, because `--input name=@file` would otherwise turn a refusal into a read. The configured path must be absolute, normalised, a regular file, not a symlink and equal to its own realpath, and the opened file's device and inode must match the lstat taken before the open, so a symlink swapped in between is refused rather than followed. Output is capped at 200 lines. Redaction drops values and keeps names (`password=[REDACTED]`) across key=value, JSON, YAML, CLI flags, URL userinfo, Authorization headers and bare token shapes, and fails closed: a line mentioning a password manager CLI or a private key is withheld whole, a line still credential-shaped after redaction is withheld whole, and an error in redaction fails the method. Both methods are read-only."
+repository: "https://github.com/sntxrr/swamp-log-tail"
+license: "MIT"
+
+models:
+  - log_tail.ts
+
+additionalFiles:
+  - README.md
+  - LICENSE.md
+
+labels:
+  - logs
+  - triage
+  - redaction
+  - ai-agent
+  - read-only
+  - homelab
+  - self-hosted
