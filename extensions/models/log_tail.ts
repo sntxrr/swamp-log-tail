@@ -668,7 +668,14 @@ export const model = {
   type: "@sntxrr/log-tail/allowlist",
   description:
     "Read the last lines of a log chosen by NAME from an allowlist fixed in the definition — never by path — with secret values redacted and password-manager lines withheld. Built for an alert-triage agent with no shell.",
-  version: "2026.10.22.1",
+  version: "2026.10.25.1",
+  upgrades: [
+    {
+      toVersion: "2026.10.25.1",
+      description: "Version bump, no schema changes",
+      upgradeAttributes: (old: Record<string, unknown>) => old,
+    },
+  ],
   globalArguments: GlobalArgsSchema,
   resources: {
     tail: {
@@ -695,6 +702,11 @@ export const model = {
         args: z.infer<typeof TailArgsSchema>,
         context: Context,
       ): Promise<Tail> => {
+        // The raw name is not logged: it is unvalidated until tailLog
+        // resolves it, and `--input name=@file` can fill it from a file.
+        context.logger.info("tail: reading up to {lines} lines", {
+          lines: args.lines,
+        });
         const result = await tailLog(context.globalArgs, args.name, args.lines);
         context.logger.info(
           "{name}: {count} lines, {redacted} values redacted, {withheld} lines withheld",
@@ -717,6 +729,9 @@ export const model = {
         _args: unknown,
         context: Context,
       ): Promise<z.infer<typeof ListSchema>> => {
+        context.logger.info("list: checking {count} allowlisted logs", {
+          count: Object.keys(context.globalArgs.logs).length,
+        });
         const result = await listLogs(context.globalArgs);
         context.logger.info("{count} allowlisted logs", {
           count: result.logs.length,

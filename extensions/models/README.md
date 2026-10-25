@@ -65,7 +65,7 @@ Values are dropped and names kept, so a line still says what was there:
 | `password=hunter2 user=alice`           | `password=[REDACTED] user=alice`            |
 | `{"api_key": "abc123"}`                 | `{"api_key": "[REDACTED]"}`                 |
 | `--api-token=abc`                       | `--api-token=[REDACTED]`                    |
-| `postgres://app:hunter2@db.example.com` | `postgres://app:[REDACTED]@db.example.com`  |
+| a URL whose userinfo is `app:hunter2`   | the same URL, userinfo `app:[REDACTED]`     |
 | `Authorization: Bearer abc.def`         | `Authorization: Bearer [REDACTED]`          |
 | a bare GitHub/GitLab/AWS/JWT-shaped token | `[REDACTED]`                              |
 
